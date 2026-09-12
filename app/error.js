@@ -1,0 +1,1 @@
+"use client"; export default function Error({reset}){return <section className="page-hero section"><p className="kicker">Connection interrupted</p><h1>We couldn’t load this page.</h1><p className="lead">Check the Laravel API connection and try again.</p><button onClick={reset} className="button primary">Try again</button></section>}

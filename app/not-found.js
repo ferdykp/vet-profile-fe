@@ -1,0 +1,1 @@
+import Link from "next/link"; export default function NotFound(){return <section className="page-hero section"><p className="kicker">404 · Field note missing</p><h1>This page isn’t in the archive.</h1><p className="lead">The page may have moved, been unpublished, or never existed.</p><Link href="/" className="button primary">Return home</Link></section>}
