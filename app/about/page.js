@@ -2,124 +2,312 @@ import Icon from "@/components/Icon";
 import { getProfile } from "@/lib/api";
 import { mediaUrl } from "@/lib/format";
 import { portrait } from "@/lib/demo-data";
+
 export const metadata = {
-  title: "About"
+  title: "About",
 };
+
 export default async function About() {
   const p = await getProfile();
   const profileImage = mediaUrl(p.profile_photo, portrait);
-  const story = p.biography || "My work lives at the intersection of diagnostic precision and humane communication. I write to make complex veterinary medicine clearer, more memorable, and more useful at the bedside.";
-  return <>
-      <section className="w-[min(1280px,_calc(100%_-_96px))] my-0 mx-auto grid grid-cols-[5fr_7fr] gap-18 items-center pt-10 pb-18.5 max-[1020px]:w-[min(100%_-_48px,_1280px)] max-[800px]:w-[min(100%_-_32px,_1280px)] max-[800px]:grid-cols-1 max-[800px]:gap-9.5 max-[560px]:w-[min(100%_-_24px,_1280px)]">
-        <div className="relative max-w-130 max-[800px]:max-w-125">
-          <div className="absolute -inset-3 bg-[rgba(206,_233,_213,_0.45)] rounded-[12px] -rotate-1"></div>
-          <div className="relative overflow-hidden rounded-[12px] bg-[#f5f3ed] shadow-[0_2px_8px_rgba(41,_60,_50,_0.08)] [&_>_img]:w-full [&_>_img]:aspect-[1/1] [&_>_img]:object-cover [&_>_div]:flex [&_>_div]:justify-between [&_>_div]:items-center [&_>_div]:p-[15px] [&_span]:flex [&_span]:flex-col [&_b]:text-[12px] [&_b]:uppercase [&_b]:tracking-[0.08em] [&_b]:text-[#526a5a] [&_small]:text-[12px] [&_small]:text-[#424844] [&_small]:mt-1 [&_i]:w-2 [&_i]:h-2 [&_i]:rounded-full [&_i]:bg-[#c9866b]">
-            <img src={profileImage} alt={p.full_name || "drh. Tiara"} />
-            <div>
-              <span>
-                <b>{p.location || "Gloucestershire & Oxford"}</b>
-                <small>Small Animal Medicine · Clinical Pathology</small>
-              </span>
-              <i></i>
+  const story =
+    p.biography ||
+    "My work lives at the intersection of diagnostic precision and humane communication. I write to make complex veterinary medicine clearer, more memorable, and more useful at the bedside.";
+
+  return (
+    <main className="w-full bg-[#fbf9f3] text-[#14261d] min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* HERO / BIO SECTION */}
+        <section className="py-12 md:py-16 lg:py-20 border-b border-[#526a5a]/10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Left Image Card */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-full max-w-md">
+                <div className="absolute -inset-2.5 bg-[#cee9d5]/60 rounded-2xl -rotate-1"></div>
+                <div className="relative overflow-hidden rounded-xl bg-[#f5f3ed] shadow-lg shadow-[#14261d]/5 border border-[#526a5a]/10 space-y-3 p-2.5">
+                  <div className="aspect-square overflow-hidden rounded-lg bg-[#eae8e2]">
+                    <img
+                      src={profileImage}
+                      alt={p.full_name || "drh. Tiara"}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="flex justify-between items-center px-3 py-2">
+                    <div>
+                      <b className="block text-xs uppercase tracking-wider text-[#526a5a]">
+                        {p.location || "Gloucestershire & Oxford"}
+                      </b>
+                      <span className="block text-xs text-[#424844] mt-0.5">
+                        Small Animal Medicine · Clinical Pathology
+                      </span>
+                    </div>
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#c9866b] flex-shrink-0"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Hero Info */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#526a5a] font-semibold">
+                <span>Curriculum Vitae & Ethos</span>
+                <span>•</span>
+                <span>Est. 2011</span>
+              </div>
+
+              <div>
+                <span className="block text-sm uppercase tracking-wider text-[#526a5a] font-bold">
+                  {p.full_name || "drh. Tiara"}, DVM
+                </span>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#14261d] leading-tight mt-1">
+                  {p.headline ||
+                    "Bridging the science of veterinary diagnostics with the human stories behind every patient."}
+                </h1>
+              </div>
+
+              <p className="text-base text-[#424844] leading-relaxed max-w-2xl">
+                {p.short_bio}
+              </p>
+
+              <div className="flex flex-wrap gap-4 pt-2 text-xs text-[#526a5a] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-[#cee9d5]/50 px-3 py-1.5 rounded-md">
+                  ✓{" "}
+                  {p.educations?.[0]?.degree || "Doctor of Veterinary Medicine"}
+                </span>
+                <span className="inline-flex items-center gap-1 bg-[#cee9d5]/50 px-3 py-1.5 rounded-md">
+                  ✚{" "}
+                  {p.memberships?.[0]?.organization ||
+                    "Professional Veterinary Membership"}
+                </span>
+                <span className="inline-flex items-center gap-1 bg-[#cee9d5]/50 px-3 py-1.5 rounded-md">
+                  <Icon name="book" className="w-4 h-4" /> Contributing Essayist
+                  & Speaker
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="[&_>_small]:text-[13px] [&_>_small]:uppercase [&_>_small]:tracking-[0.08em] [&_>_small]:text-[#526a5a] [&_h1]:text-[clamp(32px,_4vw,_52px)] [&_h1]:leading-[1.12] [&_h1]:mt-2 [&_h1]:mb-4.5 [&_h1]:mx-0 [&_>_p]:max-w-180 [&_>_p]:text-[16px] [&_>_p]:leading-[1.75] [&_>_p]:text-[#424844] max-[560px]:[&_h1]:text-[39px]">
-          <div className="flex items-center gap-[9px] mb-4 [&_span]:text-[12px] [&_span]:uppercase [&_span]:tracking-[0.09em] [&_span]:text-[#526a5a]">
-            <span>Curriculum Vitae &amp; Ethos</span>
-            <b>•</b>
-            <span>Est. 2011</span>
-          </div>
-          <small>{p.full_name || "drh. Tiara"}, DVM</small>
-          <h1>
-            {p.headline || "Bridging the science of veterinary diagnostics with the human stories behind every patient."}
-          </h1>
-          <p>{p.short_bio}</p>
-          <div className="flex flex-wrap gap-[14px_26px] mt-5.5 [&_span]:text-[12px] [&_span]:text-[#526a5a] max-[560px]:flex-col max-[560px]:gap-2">
-            <span>
-              ✓ {p.educations?.[0]?.degree || "Doctor of Veterinary Medicine"}
+        </section>
+      </div>
+
+      {/* NARRATIVE SECTION */}
+      <section className="py-14 md:py-20 bg-[#f5f3ed] border-b border-[#526a5a]/10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="space-y-1">
+            <span className="block text-xs font-bold tracking-widest uppercase text-[#526a5a]">
+              Narrative
             </span>
-            <span>
-              ✚{" "}
-              {p.memberships?.[0]?.organization || "Professional Veterinary Membership"}
+            <h2 className="text-3xl font-serif font-semibold text-[#14261d]">
+              The Thread Between the Microscope & the Page
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              [
+                "I.",
+                "Forest Basins & Keen Curiosity",
+                story,
+                "Origins · Natural Science",
+              ],
+              [
+                "II.",
+                "The Intensity of the Clinic Floor",
+                p.experiences?.[0]?.description || story,
+                "Residency · Critical Care",
+              ],
+              [
+                "III.",
+                "Writing as a Clinical Instrument",
+                "The notebook became a second diagnostic tool: a way to interrogate uncertainty, preserve observations, and communicate difficult medicine with greater clarity.",
+                "Practice · Clinical Writing",
+              ],
+            ].map(([n, t, c, f]) => (
+              <article
+                key={n}
+                className="bg-[#fbf9f3] rounded-xl p-6 border border-[#526a5a]/10 flex flex-col justify-between space-y-4 shadow-sm"
+              >
+                <div className="space-y-3">
+                  <span className="font-serif text-2xl text-[#c9866b] font-bold block">
+                    {n}
+                  </span>
+                  <h3 className="text-xl font-serif font-semibold text-[#14261d]">
+                    {t}
+                  </h3>
+                  <p className="text-sm text-[#424844] leading-relaxed">{c}</p>
+                </div>
+                <span className="block pt-3 border-t border-[#526a5a]/10 text-xs uppercase tracking-wider text-[#526a5a]">
+                  {f}
+                </span>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROFESSIONAL RECORD SECTION */}
+      <section className="py-14 md:py-20">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="space-y-1">
+            <span className="block text-xs font-bold tracking-widest uppercase text-[#526a5a]">
+              Professional Record
             </span>
-            <span><Icon name="book" className="size-5" /> Contributing Essayist & Speaker</span>
+            <h2 className="text-3xl font-serif font-semibold text-[#14261d]">
+              Appointments, Study & Clinical Milestones
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            {/* Timeline Column */}
+            <div className="lg:col-span-8 border-t border-[#d5ddd3] divide-y divide-[#d5ddd3]">
+              {(p.experiences || []).length > 0 ||
+              (p.educations || []).length > 0 ? (
+                <>
+                  {(p.experiences || []).map((x, i) => (
+                    <div
+                      key={x.id || i}
+                      className="grid grid-cols-[40px_1fr] gap-4 py-6"
+                    >
+                      <span className="text-xs font-semibold text-[#526a5a] pt-1">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <section className="space-y-1">
+                        <span className="block text-xs uppercase tracking-wider text-[#59625b]">
+                          {x.organization}
+                        </span>
+                        <h3 className="text-xl font-serif font-semibold text-[#14261d]">
+                          {x.position}
+                        </h3>
+                        <p className="text-sm text-[#424844] leading-relaxed">
+                          {x.description}
+                        </p>
+                      </section>
+                    </div>
+                  ))}
+
+                  {(p.educations || []).map((x, i) => (
+                    <div
+                      key={`e${x.id || i}`}
+                      className="grid grid-cols-[40px_1fr] gap-4 py-6"
+                    >
+                      <span className="text-xs font-semibold text-[#526a5a] pt-1">
+                        ED
+                      </span>
+                      <section className="space-y-1">
+                        <span className="block text-xs uppercase tracking-wider text-[#59625b]">
+                          {x.institution}
+                        </span>
+                        <h3 className="text-xl font-serif font-semibold text-[#14261d]">
+                          {x.degree}
+                        </h3>
+                        <p className="text-sm text-[#424844] leading-relaxed">
+                          {x.description}
+                        </p>
+                      </section>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div className="py-8 text-xs text-[#59625b] italic">
+                  No experience or education records available.
+                </div>
+              )}
+            </div>
+
+            {/* Sidebar Column */}
+            <aside className="lg:col-span-4 p-6 bg-[#e7ece5] rounded-xl border border-[#526a5a]/10 space-y-4">
+              <span className="block text-xs uppercase tracking-widest text-[#526a5a] font-bold border-b border-[#526a5a]/15 pb-2">
+                Clinical Focus Areas
+              </span>
+              {(p.clinical_interests || []).length > 0 ? (
+                <div className="divide-y divide-[#526a5a]/15">
+                  {p.clinical_interests.map((x, i) => (
+                    <div
+                      key={x}
+                      className="grid grid-cols-[30px_1fr] gap-2 py-2.5 items-center"
+                    >
+                      <small className="text-xs text-[#526a5a]">0{i + 1}</small>
+                      <b className="text-xs text-[#14261d] font-semibold">
+                        {x}
+                      </b>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-[#59625b] italic">
+                  No clinical interests listed.
+                </p>
+              )}
+            </aside>
           </div>
         </div>
       </section>
 
-      <section className="py-17 px-0 bg-[#f5f3ed]">
-        <div className="w-[min(1280px,_calc(100%_-_96px))] my-0 mx-auto max-[1020px]:w-[min(100%_-_48px,_1280px)] max-[800px]:w-[min(100%_-_32px,_1280px)] max-[560px]:w-[min(100%_-_24px,_1280px)]">
-          <div className="max-w-195 mb-7 [&_>_span]:text-[12px] [&_>_span]:uppercase [&_>_span]:tracking-[0.09em] [&_>_span]:text-[#526a5a] [&_>_span]:font-bold [&_h2]:text-[38px] [&_h2]:mt-1 max-[560px]:[&_h2]:text-[32px]">
-            <span>Narrative</span>
-            <h2>The Thread Between the Microscope &amp; the Page</h2>
+      {/* PUBLICATIONS & SPEAKING SECTION */}
+      <section className="bg-[#eae8e2] py-14 md:py-20 border-t border-[#526a5a]/10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="space-y-1">
+            <span className="block text-xs font-bold tracking-widest uppercase text-[#526a5a]">
+              Selected Work
+            </span>
+            <h2 className="text-3xl font-serif font-semibold text-[#14261d]">
+              Publications & Lectures
+            </h2>
           </div>
-          <div className="grid grid-cols-[repeat(3,_1fr)] gap-5 [&_article]:min-h-82.5 [&_article]:p-6.5 [&_article]:bg-[#fbf9f3] [&_article]:rounded-[10px] [&_article]:shadow-[0_1px_5px_rgba(41,_60,_50,_0.05)] [&_article]:flex [&_article]:flex-col [&_article_>_span]:font-(family-name:--font-serif) [&_article_>_span]:text-[30px] [&_article_>_span]:text-[#c9866b] [&_h3]:text-[21px] [&_h3]:my-[9px] [&_h3]:mx-0 [&_p]:text-[14px] [&_p]:leading-[1.75] [&_p]:text-[#424844] [&_p]:flex-1 [&_small]:text-[12px] [&_small]:uppercase [&_small]:tracking-[0.08em] [&_small]:text-[#526a5a] max-[1020px]:grid-cols-1 max-[1020px]:[&_article]:min-h-auto">
-            {[["I.", "Forest Basins & Keen Curiosity", story, "Origins · Natural Science"], ["II.", "The Intensity of the Clinic Floor", p.experiences?.[0]?.description || story, "Residency · Critical Care"], ["III.", "Writing as a Clinical Instrument", "The notebook became a second diagnostic tool: a way to interrogate uncertainty, preserve observations, and communicate difficult medicine with greater clarity.", "Practice · Clinical Writing"]].map(([n, t, c, f]) => <article key={n}>
-                <span>{n}</span>
-                <h3>{t}</h3>
-                <p>{c}</p>
-                <small>{f}</small>
-              </article>)}
-          </div>
-        </div>
-      </section>
 
-      <section className="w-[min(1280px,_calc(100%_-_96px))] my-0 mx-auto py-18 max-[1020px]:w-[min(100%_-_48px,_1280px)] max-[800px]:w-[min(100%_-_32px,_1280px)] max-[560px]:w-[min(100%_-_24px,_1280px)]">
-        <div className="max-w-195 mb-7 [&_>_span]:text-[12px] [&_>_span]:uppercase [&_>_span]:tracking-[0.09em] [&_>_span]:text-[#526a5a] [&_>_span]:font-bold [&_h2]:text-[38px] [&_h2]:mt-1 max-[560px]:[&_h2]:text-[32px]">
-          <span>Professional Record</span>
-          <h2>Appointments, study &amp; clinical milestones</h2>
-        </div>
-        <div className="grid grid-cols-[1fr_300px] gap-17.5 max-[800px]:grid-cols-1">
-          <div className="border-t border-t-[#d5ddd3] [&_>_div]:grid [&_>_div]:grid-cols-[50px_1fr] [&_>_div]:gap-4 [&_>_div]:py-5.5 [&_>_div]:px-0 [&_>_div]:border-b [&_>_div]:border-b-[#d5ddd3] [&_>_div_>_span]:text-[12px] [&_>_div_>_span]:text-[#526a5a] [&_section_small]:text-[12px] [&_section_small]:uppercase [&_section_small]:tracking-[0.07em] [&_section_small]:text-[#59625b] [&_h3]:text-[23px] [&_h3]:my-[5px] [&_h3]:mx-0 [&_p]:text-[14px] [&_p]:leading-[1.65] [&_p]:text-[#424844]">
-            {(p.experiences || []).map((x, i) => <div key={x.id || i}>
-                <span>{String(i + 1).padStart(2, "0")}</span>
-                <section>
-                  <small>{x.organization}</small>
-                  <h3>{x.position}</h3>
-                  <p>{x.description}</p>
-                </section>
-              </div>)}
-            {(p.educations || []).map((x, i) => <div key={`e${x.id || i}`}>
-                <span>ED</span>
-                <section>
-                  <small>{x.institution}</small>
-                  <h3>{x.degree}</h3>
-                  <p>{x.description}</p>
-                </section>
-              </div>)}
-          </div>
-          <aside className="p-5.5 bg-[#e7ece5] rounded-[10px] h-[max-content] [&_>_span]:block [&_>_span]:mb-4 [&_>_span]:text-[12px] [&_>_span]:uppercase [&_>_span]:tracking-[0.09em] [&_>_span]:text-[#526a5a] [&_>_div]:grid [&_>_div]:grid-cols-[28px_1fr] [&_>_div]:gap-[7px] [&_>_div]:py-3 [&_>_div]:px-0 [&_>_div]:border-t [&_>_div]:border-t-[#526a5a]/15 [&_small]:text-[#526a5a] [&_small]:text-[12px] [&_b]:text-[13px]">
-            <span>Clinical Inquiries</span>
-            {(p.clinical_interests || []).map((x, i) => <div key={x}>
-                <small>0{i + 1}</small>
-                <b>{x}</b>
-              </div>)}
-          </aside>
-        </div>
-      </section>
+          {(p.publications || []).length > 0 ||
+          (p.speaking_events || []).length > 0 ? (
+            <div className="border-t border-[#d5ddd3] divide-y divide-[#d5ddd3]">
+              {(p.publications || []).map((x) => (
+                <a
+                  href={x.url || "#"}
+                  key={x.id}
+                  className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-center py-4 text-xs text-[#59625b] hover:text-[#14261d] transition-colors"
+                >
+                  <span className="sm:col-span-2 font-medium">{x.year}</span>
+                  <b className="sm:col-span-6 font-serif text-base text-[#14261d] font-medium">
+                    {x.title}
+                  </b>
+                  <small className="sm:col-span-3 text-xs text-[#59625b]">
+                    {x.publisher}
+                  </small>
+                  <span className="sm:col-span-1 text-right hidden sm:block">
+                    <Icon
+                      name="external"
+                      className="w-4 h-4 inline-block text-[#526a5a]"
+                    />
+                  </span>
+                </a>
+              ))}
 
-      <section className="bg-[#eae8e2] py-16.5 px-0">
-        <div className="w-[min(1280px,_calc(100%_-_96px))] my-0 mx-auto max-[1020px]:w-[min(100%_-_48px,_1280px)] max-[800px]:w-[min(100%_-_32px,_1280px)] max-[560px]:w-[min(100%_-_24px,_1280px)]">
-          <div className="max-w-195 mb-7 [&_>_span]:text-[12px] [&_>_span]:uppercase [&_>_span]:tracking-[0.09em] [&_>_span]:text-[#526a5a] [&_>_span]:font-bold [&_h2]:text-[38px] [&_h2]:mt-1 max-[560px]:[&_h2]:text-[32px]">
-            <span>Selected Work</span>
-            <h2>Publications &amp; lectures</h2>
-          </div>
-          <div className="border-t border-t-[#d5ddd3] [&_>_a]:grid [&_>_a]:grid-cols-[70px_1.4fr_1fr_30px] [&_>_a]:gap-[15px] [&_>_a]:items-center [&_>_a]:py-[17px] [&_>_a]:px-0 [&_>_a]:border-b [&_>_a]:border-b-[#d5ddd3] [&_>_div]:grid [&_>_div]:grid-cols-[70px_1.4fr_1fr_30px] [&_>_div]:gap-[15px] [&_>_div]:items-center [&_>_div]:py-[17px] [&_>_div]:px-0 [&_>_div]:border-b [&_>_div]:border-b-[#d5ddd3] [&_span]:text-[12px] [&_span]:text-[#59625b] [&_small]:text-[12px] [&_small]:text-[#59625b] [&_b]:font-(family-name:--font-serif) [&_b]:text-[16px] [&_b]:font-medium [&_i]:text-right [&_i]:not-italic max-[800px]:[&_>_a]:grid-cols-[60px_1fr] max-[800px]:[&_>_div]:grid-cols-[60px_1fr] max-[800px]:[&_small]:col-start-2 max-[800px]:[&_i]:hidden">
-            {(p.publications || []).map(x => <a href={x.url || "#"} key={x.id}>
-                <span>{x.year}</span>
-                <b>{x.title}</b>
-                <small>{x.publisher}</small>
-                <i><Icon name="external" className="size-5" /></i>
-              </a>)}
-            {(p.speaking_events || []).map(x => <div key={x.id}>
-                <span>{x.event_date?.slice(0, 4)}</span>
-                <b>{x.topic || x.event_name}</b>
-                <small>{x.event_name}</small>
-                <i>◌</i>
-              </div>)}
-          </div>
+              {(p.speaking_events || []).map((x) => (
+                <div
+                  key={x.id}
+                  className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-center py-4 text-xs text-[#59625b]"
+                >
+                  <span className="sm:col-span-2 font-medium">
+                    {x.event_date?.slice(0, 4)}
+                  </span>
+                  <b className="sm:col-span-6 font-serif text-base text-[#14261d] font-medium">
+                    {x.topic || x.event_name}
+                  </b>
+                  <small className="sm:col-span-3 text-xs text-[#59625b]">
+                    {x.event_name}
+                  </small>
+                  <span className="sm:col-span-1 text-right hidden sm:block">
+                    ◌
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-8 text-center rounded-xl bg-[#f0eee8] border border-dashed border-[#526a5a]/20">
+              <p className="text-xs text-[#59625b]">
+                No publications or speaking events listed yet.
+              </p>
+            </div>
+          )}
         </div>
       </section>
-    </>;
+    </main>
+  );
 }

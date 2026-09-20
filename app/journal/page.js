@@ -3,58 +3,169 @@ import Icon from "@/components/Icon";
 import Link from "next/link";
 import { getCategories, getPosts } from "@/lib/api";
 import PostCard from "@/components/PostCard";
+
 export const metadata = {
-  title: "Journal"
+  title: "Journal",
 };
-export default async function Journal({
-  searchParams
-}) {
+
+export default async function Journal({ searchParams }) {
   const sp = await searchParams;
   const search = typeof sp?.search === "string" ? sp.search : "";
   const sort = sp?.sort === "readtime" ? "readtime" : "newest";
   const page = Math.max(1, parseInt(sp?.page, 10) || 1);
   const category = typeof sp?.category === "string" ? sp.category : "";
-  const categoryHref = value => `/journal?${new URLSearchParams({search, sort, category: value})}`;
-  const [posts, categories] = await Promise.all([getPosts({
-    search,
-    category,
-    per_page: 12, sort, page
-  }), getCategories()]);
+  const categoryHref = (value) =>
+    `/journal?${new URLSearchParams({ search, sort, category: value })}`;
+
+  const [posts, categories] = await Promise.all([
+    getPosts({
+      search,
+      category,
+      per_page: 12,
+      sort,
+      page,
+    }),
+    getCategories(),
+  ]);
+
   const list = posts.data || [];
-  return <div className="w-[min(1280px,_calc(100%_-_96px))] my-0 mx-auto pt-7 pb-20 max-[1020px]:w-[min(100%_-_48px,_1280px)] max-[800px]:w-[min(100%_-_32px,_1280px)] max-[560px]:w-[min(100%_-_24px,_1280px)]">
-      <header className="pb-6.5 border-b border-b-[#d5ddd3] [&_h1]:text-[52px] [&_h1]:mt-[5px] [&_h1]:mb-1.5 [&_h1]:mx-0 max-[560px]:[&_h1]:text-[44px]">
-        <div className="flex justify-between items-end gap-7.5 [&_>_div:first-child_>_p]:max-w-162.5 [&_>_div:first-child_>_p]:m-0 [&_>_div:first-child_>_p]:text-[#424844] [&_>_div:first-child_>_p]:text-[16px] [&_>_div:first-child_>_p]:leading-[1.7] max-[800px]:items-start max-[800px]:flex-col">
-          <div>
-            <span className="block text-[13px] font-bold tracking-[0.09em] uppercase text-[#526a5a]">Archival Vol. IV · Clinical &amp; Field Records</span>
-            <h1>The Journal</h1>
-            <p>Notes, clinical cases, experiences, observations, and stories collected along the way.</p>
+
+  return (
+    <main className="w-full bg-[#fbf9f3] text-[#14261d] min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
+        {/* HEADER SECTION */}
+        <header className="pb-8 border-b border-[#526a5a]/10 space-y-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <span className="block text-xs font-bold tracking-widest uppercase text-[#526a5a]">
+                Archival Vol. IV · Clinical & Field Records
+              </span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-semibold text-[#14261d] tracking-tight">
+                The Journal
+              </h1>
+              <p className="text-base sm:text-lg text-[#424844] leading-relaxed">
+                Notes, clinical cases, experiences, observations, and stories
+                collected along the way.
+              </p>
+            </div>
+
+            <div className="text-left md:text-right space-y-1">
+              <span className="inline-block py-1.5 px-3 rounded-full bg-[#f0eee8] text-xs font-bold uppercase tracking-wider text-[#424844]">
+                {posts.total ?? list.length} Published Monographs & Case Studies
+              </span>
+              <p className="font-serif italic text-xs text-[#59625b]">
+                Clinical knowledge & reflective writing
+              </p>
+            </div>
           </div>
-          <div className="text-right [&_span]:inline-block [&_span]:py-[7px] [&_span]:px-2.5 [&_span]:rounded-full [&_span]:bg-[#f0eee8] [&_span]:text-[12px] [&_span]:uppercase [&_span]:tracking-[0.07em] [&_span]:text-[#424844] [&_p]:font-(family-name:--font-serif) [&_p]:italic [&_p]:text-[12px] [&_p]:text-[#59625b] [&_p]:mt-[7px] [&_p]:mb-0 [&_p]:mx-0 max-[800px]:text-left">
-            <span>{posts.total ?? list.length} Published Monographs &amp; Case Studies</span>
-            <p>Clinical knowledge & reflective writing</p>
+
+          {/* SEARCH & SORT FORM */}
+          <form className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2">
+            <div className="sm:col-span-7 relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#59625b]">
+                <Icon name="search" className="w-5 h-5" />
+              </span>
+              <input
+                aria-label="Search journal"
+                name="search"
+                defaultValue={search}
+                placeholder="Search by pathology, species, drug protocol, or essay theme..."
+                className="w-full h-12 pl-11 pr-4 rounded-lg bg-[#f5f3ed] border border-[#526a5a]/10 text-sm text-[#424844] placeholder-[#59625b]/60 focus:outline-none focus:ring-1 focus:ring-[#526a5a]"
+              />
+            </div>
+
+            <input type="hidden" name="category" value={category} />
+
+            <div className="sm:col-span-3">
+              <select
+                aria-label="Sort articles"
+                name="sort"
+                defaultValue={sort}
+                className="w-full h-12 px-4 rounded-lg bg-[#f5f3ed] border border-[#526a5a]/10 text-xs font-semibold uppercase tracking-wider text-[#424844] focus:outline-none focus:ring-1 focus:ring-[#526a5a]"
+              >
+                <option value="newest">Chronological (Recent)</option>
+                <option value="readtime">Read Time (Longest)</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <button
+                type="submit"
+                className="w-full h-12 rounded-lg bg-[#293c32] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#14261d] transition-colors"
+              >
+                Apply Filter
+              </button>
+            </div>
+          </form>
+
+          {/* CATEGORIES BADGES */}
+          <div className="flex gap-2 overflow-x-auto pt-2 pb-1 scrollbar-none">
+            <Link
+              href={categoryHref("")}
+              className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors ${
+                !category
+                  ? "bg-[#293c32] text-white"
+                  : "bg-[#f0eee8] text-[#424844] hover:bg-[#cee9d5]"
+              }`}
+            >
+              All Writings{" "}
+              <small className="opacity-70">
+                ({posts.total ?? list.length})
+              </small>
+            </Link>
+            {(categories || []).map((c) => (
+              <Link
+                key={c.id}
+                href={categoryHref(c.slug)}
+                className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  category === c.slug
+                    ? "bg-[#293c32] text-white"
+                    : "bg-[#f0eee8] text-[#424844] hover:bg-[#cee9d5]"
+                }`}
+              >
+                {c.name}{" "}
+                <small className="opacity-70">({c.posts_count || 0})</small>
+              </Link>
+            ))}
           </div>
-        </div>
+        </header>
 
-        <form className="grid grid-cols-[minmax(0,1fr)_220px_auto] gap-5 mt-7.5 [&_input]:w-full [&_input]:h-12 [&_input]:border-0 [&_input]:rounded-[10px] [&_input]:bg-[#f5f3ed] [&_input]:outline-none [&_input]:text-[#424844] [&_select]:w-full [&_select]:h-12 [&_select]:border-0 [&_select]:rounded-[10px] [&_select]:bg-[#f5f3ed] [&_select]:outline-none [&_select]:text-[#424844] [&_input]:py-0 [&_input]:pr-[15px] [&_input]:pl-[45px] [&_select]:py-0 [&_select]:px-[15px] [&_select]:text-[12px] [&_select]:uppercase [&_select]:tracking-[0.06em] max-[800px]:grid-cols-1">
-          <div className="relative [&_>_span]:absolute [&_>_span]:left-[15px] [&_>_span]:top-[50%] [&_>_span]:-translate-y-1/2 [&_>_span]:text-[18px] [&_>_span]:text-[#59625b]"><span><Icon name="search" /></span><input aria-label="Search journal" name="search" defaultValue={search} placeholder="Search by pathology, species, drug protocol, or essay theme..." /></div>
-          <input type="hidden" name="category" value={category} />
-          <select aria-label="Sort articles" name="sort" defaultValue={sort}>
-            <option value="newest">Chronological (Recent)</option>
-            <option value="readtime">Read Time (Longest)</option>
-          </select><button className="min-h-12 rounded-lg bg-[#293c32] px-5 text-sm font-semibold text-white hover:bg-[#14261d]">Apply</button>
-        </form>
+        {/* POSTS LISTING */}
+        <section className="space-y-8">
+          {list.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {list.map((p, i) => (
+                <PostCard key={p.id} post={p} large={i === 0} index={i} />
+              ))}
+            </div>
+          ) : (
+            /* EMPTY STATE */
+            <div className="p-16 text-center rounded-xl bg-[#f0eee8]/50 border border-dashed border-[#526a5a]/20 space-y-3 my-8">
+              <div className="w-12 h-12 rounded-full bg-[#cee9d5] text-[#526a5a] flex items-center justify-center mx-auto">
+                <Icon name="book" className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-serif font-semibold text-[#14261d]">
+                No Monographs Found
+              </h3>
+              <p className="text-xs text-[#59625b] max-w-md mx-auto">
+                No matching articles were found for your query. Try searching
+                with a different keyword or selecting another category.
+              </p>
+            </div>
+          )}
+        </section>
 
-        <div className="flex gap-2 overflow-x-auto pt-4.5 [&_a]:whitespace-nowrap [&_a]:py-2 [&_a]:px-3 [&_a]:rounded-full [&_a]:bg-[#f0eee8] [&_a]:text-[12px] [&_a]:uppercase [&_a]:tracking-[0.06em] [&_a]:text-[#424844] [&_a[data-ui~=active]]:bg-[#293c32] [&_a[data-ui~=active]]:text-[#fff] [&_small]:opacity-[0.65]">
-          <Link href={categoryHref("")} data-ui={!category ? "active" : ""}>All Writings <small>({posts.total ?? list.length})</small></Link>
-          {categories.map(c => <Link key={c.id} href={categoryHref(c.slug)} data-ui={category === c.slug ? "active" : ""}>{c.name} <small>({c.posts_count || 0})</small></Link>)}
-        </div>
-      </header>
-
-      <section className="grid grid-cols-12 gap-5 pt-8 [&_>_[data-ui~=journal-card]:not(:where([data-ui~=journal-card-lead]))]:col-span-6 [&_>_[data-ui~=journal-card-lead]]:col-span-12 [&_>_[data-ui~=journal-card-lead]]:grid [&_>_[data-ui~=journal-card-lead]]:grid-cols-2 [&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-image]]:h-full [&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-image]]:min-h-97.5 [&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-copy]]:p-9 [&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-copy]]:flex [&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-copy]]:flex-col [&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-copy]]:justify-center [&_>_[data-ui~=journal-card-lead]_h3]:text-[36px] max-[800px]:[&_>_[data-ui~=journal-card]]:col-span-12 max-[800px]:[&_>_[data-ui~=journal-card-lead]]:block max-[800px]:[&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-image]]:min-h-70 max-[800px]:[&_>_[data-ui~=journal-card-lead]_[data-ui~=journal-card-image]]:h-70 max-[560px]:[&_>_[data-ui~=journal-card-lead]_h3]:text-[29px]">
-        {list.map((p, i) => <PostCard key={p.id} post={p} large={i === 0} index={i} />)}
-      </section>
-
-      <Pagination data={posts} pathname="/journal" params={{ search, category, sort }} />
-      {!list.length && <div className="py-20 px-5 text-center [&_h3]:text-[30px] [&_p]:text-[#59625b]"><h3>No monographs found.</h3><p>Try another search phrase or archival category.</p></div>}
-    </div>;
+        {/* PAGINATION */}
+        {list.length > 0 && (
+          <div className="pt-6">
+            <Pagination
+              data={posts}
+              pathname="/journal"
+              params={{ search, category, sort }}
+            />
+          </div>
+        )}
+      </div>
+    </main>
+  );
 }
